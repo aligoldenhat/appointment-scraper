@@ -1,0 +1,453 @@
+<script>
+  $(function () {
+    $(".MorEnv").hide();
+    $(".regular-appointment-cont").hide();
+    $(".premium-lounge-appointment-cont").hide();
+    radioInputs = $(".select-time-slot").find('input[type="radio"]');
+    radioInputs.iCheck({
+      radioClass: "styled-radio",
+      checkedClass: "styled-radio-checked",
+      insert: '<div class="check"></div>',
+    });
+    $("#radio_Afternoon_185").hide();
+    $("#radio_Afternoon_186").hide();
+    $(".TimeIntervalSlot").on("click", function () {
+      //alert($(this).attr('id'));
+      var DivClass = $(this).attr("id");
+      var RadioServiceType = $("input[name='appointment-type']:checked").val();
+      if ($("#noslot_" + DivClass + "_" + RadioServiceType).length > 0) {
+        $(".status-info-box").show();
+        $("#ErrorMessage").html(
+          $("#noslot_" + DivClass + "_" + RadioServiceType).html()
+        );
+        $("#avlslot_Morning_" + RadioServiceType).hide();
+      } else {
+        $(".status-info-box").hide();
+        $("#ErrorMessage").html("");
+        $("#avlslot_Morning_" + RadioServiceType).show();
+      }
+      $(".radio-group > .radio-inline").removeClass("selected");
+      $("input[name='regular-appointment-time']").iCheck("uncheck");
+      var res = DivClass.toLowerCase();
+      $("#AppType").html("");
+      $(".choosenDiv").hide();
+      $(".submit-btn-link").addClass("disabled");
+      $("#bookingTimeId").val("");
+      $("#bookingTimeSlot").val("");
+      $("#bookingType").val("");
+      $("#bookingDate").val("");
+      if (DivClass == "Morning") {
+        $("." + res).show();
+        $(".evening").hide();
+        $(".afternoon").hide();
+        $(this).addClass("active");
+        $("#Evening").removeClass("active");
+        $("#Afternoon").removeClass("active");
+        $("#avlslot_" + DivClass + "_" + RadioServiceType).show();
+        $("#radio_" + DivClass + "_" + RadioServiceType).show();
+        $("#avlslot_Afternoon_" + RadioServiceType).hide();
+        $("#radio_Afternoon_" + RadioServiceType).hide();
+      } else if (DivClass == "Afternoon") {
+        $("." + res).show();
+        $(".evening").hide();
+        $(".morning").hide();
+        $(this).addClass("active");
+        $("#Evening").removeClass("active");
+        $("#Morning").removeClass("active");
+        $("#avlslot_" + DivClass + "_" + RadioServiceType).show();
+        $("#radio_" + DivClass + "_" + RadioServiceType).show();
+        $("#avlslot_Morning_" + RadioServiceType).hide();
+        $("#radio_Morning_" + RadioServiceType).hide();
+      } else {
+        $("." + res).show();
+        $(".morning").hide();
+        $(".afternoon").hide();
+        $(this).addClass("active");
+        $("#Morning").removeClass("active");
+        $("#Afternoon").removeClass("active");
+      }
+    });
+    $(".radio-inline input:radio").on("ifChecked", function (event) {
+      var displaystatus = $(this).attr("displaystatus");
+      if ($.trim(displaystatus) == "disabled") {
+        $("#AppType").html("");
+        $(".choosenDiv").hide();
+        $(".submit-btn-link").addClass("disabled");
+        $("#bookingTimeId").val("");
+        $("#bookingTimeSlot").val("");
+        $("#bookingType").val("");
+        $("#bookingDate").val("");
+      } else {
+        $("#selectTime").html($(this).val());
+        var BookingDate = "2022-08-25";
+        var RadioServiceType = $(
+          "input[name='appointment-type']:checked"
+        ).val();
+        if (RadioServiceType == "185") $("#AppType").html("Regular");
+        else $("#AppType").html("Premium Lounge");
+        $(".choosenDiv").show();
+        $(".submit-btn-link").removeClass("disabled");
+        $("#bookingTimeId").val($(this).attr("id"));
+        $("#bookingTimeSlot").val($(this).val());
+        $("#bookingType").val(RadioServiceType);
+        $("#bookingDate").val(BookingDate);
+      }
+    });
+  });
+</script>
+<style>
+  .custom-radio .radio-inline {
+    position: relative;
+  }
+  .custom-radio .radio-inline-checked {
+    position: relative;
+  }
+  .select-time-slot .radio-group .radio-inline-checked {
+    font-weight: bold;
+    padding-left: 28px !important;
+  }
+  .custom-radio .radio-inline:before {
+    content: "";
+    font-size: 22px;
+    border: 1px solid #b9c3c8;
+    border-radius: 100%;
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  .custom-radio .radio-inline-checked:before {
+    content: "";
+    border: 1px solid #28547e;
+    border-radius: 100%;
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  .custom-radio .radio-inline-checked:after {
+    content: "";
+    background: #28547e;
+    border-radius: 100%;
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+  }
+</style>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="select-time-slot" style="display: block">
+      <h6>Please select Time Slot for Booking Appointment</h6>
+      <span class="selected-date"
+        >Aug&nbsp;<strong>25</strong><sup>th</sup>&nbsp;Thursday</span
+      >
+      <div class="radio-group type-of-appointment">
+        <strong>Type of Appointment</strong>
+        <label
+          ><input
+            type="radio"
+            name="appointment-type"
+            class="form-control RadioServiceType"
+            value="185"
+          />Regular</label
+        >&nbsp;&nbsp;
+        <label
+          ><input
+            type="radio"
+            name="appointment-type"
+            class="form-control RadioServiceType"
+            value="186"
+          />Premium Lounge</label
+        >&nbsp;&nbsp;
+      </div>
+      <div class="tab-cont MorEnv" style="display: none">
+        <ul class="tab-type02">
+          <li>
+            <a
+              class="active TimeIntervalSlot"
+              href="javascript:void(0);"
+              id="Morning"
+              >Morning <small>(8AM-12PM)</small></a
+            >
+          </li>
+          <li>
+            <a
+              class="TimeIntervalSlot"
+              href="javascript:void(0);"
+              id="Afternoon"
+              >Afternoon <small>(12PM-3PM)</small></a
+            >
+          </li>
+          <!--<li><a class="TimeIntervalSlot" href="javascript:void(0);" id="Evening">Evening <small>(3PM-7PM)</small></a></li>-->
+        </ul>
+      </div>
+      <div
+        id="regular-appointment-cont_185"
+        class="regular-appointment-cont"
+        style="display: block"
+      >
+        <strong id="noslot_Morning_185" style="display: none"
+          >No Time slot available for Regular</strong
+        >
+        <div class="select-appointment-time" id="avlslot_Afternoon_185">
+          <div class="radio-group" id="radio_Afternoon_185">
+            <label class="radio-inline afternoon">
+              <input
+                type="radio"
+                name="regular-appointment-time"
+                value="12:30 PM - 01:00 PM"
+                id="201870"
+                displaystatus=""
+              />
+              <span class="tm-cont">
+                <span>12:30 PM</span>
+                <small>--</small>
+                <span>01:00 PM</span>
+              </span>
+              <span class="radio-tooltip">Regular</span>
+            </label>
+            <label class="radio-inline afternoon">
+              <input
+                type="radio"
+                name="regular-appointment-time"
+                value="01:00 PM - 01:30 PM"
+                id="201871"
+                displaystatus=""
+              />
+              <span class="tm-cont">
+                <span>01:00 PM</span>
+                <small>--</small>
+                <span>01:30 PM</span>
+              </span>
+              <span class="radio-tooltip">Regular</span>
+            </label>
+            <label class="radio-inline afternoon">
+              <input
+                type="radio"
+                name="regular-appointment-time"
+                value="01:30 PM - 02:00 PM"
+                id="201872"
+                displaystatus=""
+              />
+              <span class="tm-cont">
+                <span>01:30 PM</span>
+                <small>--</small>
+                <span>02:00 PM</span>
+              </span>
+              <span class="radio-tooltip">Regular</span>
+            </label>
+            <label class="radio-inline afternoon">
+              <input
+                type="radio"
+                name="regular-appointment-time"
+                value="02:00 PM - 02:30 PM"
+                id="201873"
+                displaystatus=""
+              />
+              <span class="tm-cont">
+                <span>02:00 PM</span>
+                <small>--</small>
+                <span>02:30 PM</span>
+              </span>
+              <span class="radio-tooltip">Regular</span>
+            </label>
+          </div>
+        </div>
+        <strong id="noslot_Evening_185" style="display: none"
+          >No Time slot available for Regular</strong
+        >
+      </div>
+      <div
+        id="premium-lounge-appointment-cont_186"
+        class="premium-lounge-appointment-cont"
+        style="display: none"
+      >
+        <div class="select-appointment-time" id="avlslot_Morning_186">
+          <div class="radio-group" id="radio_Morning_186">
+            <label class="radio-inline disabled morning">
+              <input
+                type="radio"
+                name="regular-appointment-time"
+                value="09:30 AM - 10:00 AM"
+                id="201889"
+                displaystatus="disabled"
+                disabled
+              />
+              <span class="tm-cont">
+                <span>09:30 AM</span>
+                <small>--</small>
+                <span>10:00 AM</span>
+              </span>
+              <span class="radio-tooltip">Premium Lounge</span>
+            </label>
+            <label class="radio-inline disabled morning">
+              <input
+                type="radio"
+                name="regular-appointment-time"
+                value="10:00 AM - 10:30 AM"
+                id="201890"
+                displaystatus="disabled"
+                disabled
+              />
+              <span class="tm-cont">
+                <span>10:00 AM</span>
+                <small>--</small>
+                <span>10:30 AM</span>
+              </span>
+              <span class="radio-tooltip">Premium Lounge</span>
+            </label>
+            <label class="radio-inline disabled morning">
+              <input
+                type="radio"
+                name="regular-appointment-time"
+                value="10:30 AM - 11:00 AM"
+                id="201926"
+                displaystatus="disabled"
+                disabled
+              />
+              <span class="tm-cont">
+                <span>10:30 AM</span>
+                <small>--</small>
+                <span>11:00 AM</span>
+              </span>
+              <span class="radio-tooltip">Premium Lounge</span>
+            </label>
+            <label class="radio-inline disabled morning">
+              <input
+                type="radio"
+                name="regular-appointment-time"
+                value="11:00 AM - 11:30 AM"
+                id="201927"
+                displaystatus="disabled"
+                disabled
+              />
+              <span class="tm-cont">
+                <span>11:00 AM</span>
+                <small>--</small>
+                <span>11:30 AM</span>
+              </span>
+              <span class="radio-tooltip">Premium Lounge</span>
+            </label>
+            <label class="radio-inline disabled morning">
+              <input
+                type="radio"
+                name="regular-appointment-time"
+                value="11:30 AM - 12:00 PM"
+                id="201928"
+                displaystatus="disabled"
+                disabled
+              />
+              <span class="tm-cont">
+                <span>11:30 AM</span>
+                <small>--</small>
+                <span>12:00 PM</span>
+              </span>
+              <span class="radio-tooltip">Premium Lounge</span>
+            </label>
+          </div>
+        </div>
+        <div class="select-appointment-time" id="avlslot_Afternoon_186">
+          <div class="radio-group" id="radio_Afternoon_186">
+            <label
+              class="radio-inline disabled afternoon"
+              style="display: none"
+            >
+              <input
+                type="radio"
+                name="regular-appointment-time"
+                value="12:00 PM - 12:30 PM"
+                id="201929"
+                displaystatus="disabled"
+                disabled
+              />
+              <span class="tm-cont">
+                <span>12:00 PM</span>
+                <small>--</small>
+                <span>12:30 PM</span>
+              </span>
+              <span class="radio-tooltip">Premium Lounge</span>
+            </label>
+            <label
+              class="radio-inline disabled afternoon"
+              style="display: none"
+            >
+              <input
+                type="radio"
+                name="regular-appointment-time"
+                value="12:30 PM - 01:00 PM"
+                id="201930"
+                displaystatus="disabled"
+                disabled
+              />
+              <span class="tm-cont">
+                <span>12:30 PM</span>
+                <small>--</small>
+                <span>01:00 PM</span>
+              </span>
+              <span class="radio-tooltip">Premium Lounge</span>
+            </label>
+            <label
+              class="radio-inline disabled afternoon"
+              style="display: none"
+            >
+              <input
+                type="radio"
+                name="regular-appointment-time"
+                value="02:00 PM - 02:30 PM"
+                id="201946"
+                displaystatus="disabled"
+                disabled
+              />
+              <span class="tm-cont">
+                <span>02:00 PM</span>
+                <small>--</small>
+                <span>02:30 PM</span>
+              </span>
+              <span class="radio-tooltip">Premium Lounge</span>
+            </label>
+          </div>
+        </div>
+        <strong id="noslot_Evening_186" style="display: none"
+          >No Time slot available for Premium Lounge</strong
+        >
+      </div>
+      <!-- If case will work for Business Category -->
+      <!-- End of code If case will work for Business Category -->
+      <div class="status-info-box" style="display: none">
+        <i class="icon icon-times-circle"></i>
+        <strong id="ErrorMessage"></strong>
+      </div>
+    </div>
+    <div class="appointment-details choosenDiv" style="display: none">
+      <h4>Appointment Details</h4>
+      <ul>
+        <li>
+          <label>Appointment Type</label>
+          <span id="AppType"></span>
+        </li>
+        <li>
+          <label>Time Slot</label>
+          <span id="selectTime"></span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<script>
+  $(function () {
+    $(".TimeSlot").each(function () {
+      var $this = $(this);
+      radioInputs = $this.find('input[type="radio"]');
+      // apply custom iCheck styles to radios
+      radioInputs.iCheck({
+        radioClass: "styled-radio",
+        checkedClass: "styled-radio-checked",
+        insert: '<div class="check"></div>',
+      });
+    });
+  });
+</script>

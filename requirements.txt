@@ -1,0 +1,7 @@
+pyparsing
+selenium
+2captcha-python
+twilio
+python-pushover
+undetected_chromedriver
+selenium-wire
